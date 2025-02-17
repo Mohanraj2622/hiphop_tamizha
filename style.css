@@ -1,0 +1,509 @@
+:root {
+  --bg-dark: #373838;
+  --sidebar-bg: #040404;
+  --accent-green: #1DB954;
+  --text-light: #fffdfd;
+  --text-gray: #fafafa;
+  --player-bg: #9ba39e;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--text-light);
+  height: 100vh;
+  overflow: hidden;
+  margin-top: 70px;
+}
+
+.Welcome {
+  text-align: center;
+  position: fixed;
+  top: 35px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1rem;
+  z-index: 999;
+}
+
+.logo-container {
+  text-align: center;
+}
+
+.logo {
+  width: 50%;
+  height: 50%;
+  border-radius: 50%;
+  margin-bottom: 20px;
+  background-color: #040404;
+}
+
+.app-title {
+  font-size: 24px;
+  color: var(--text-light);
+}
+
+.header {
+  font-size: 2rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  font-weight: bold;
+  color: #fff;
+  letter-spacing: 2px;
+  padding: 5px;
+  text-align: center;
+  background: linear-gradient(45deg, #ff6f61, #f6d365, #00bcd4, #8e44ad);
+  background-size: 50% 50%;
+  animation: gradientAnimation 10s ease infinite;
+  -webkit-background-clip: text;
+  color: transparent;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  transition: box-shadow 0.3s ease-in-out;
+  z-index: 999;
+}
+
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.header:hover {
+  cursor: pointer;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.search-bar {
+  margin-bottom: 20px;
+  margin-top: 5px;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 10px;
+  background-color: white;
+  border: none;
+  border-radius: 20px;
+  color: red;
+}
+
+.track-list {
+  list-style: none;
+  padding: 0;
+}
+
+.track {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+.track-cover {
+  width: 50px;
+  height: 50px;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+.track-info {
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* Player container styles */
+.player-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 5px;
+}
+
+/* Player Container */
+.modified-player {
+  position: fixed;
+  bottom: 60px;
+  left: 0;
+  width: 100%;
+  padding: 8px;
+  background-color: var(--player-bg);
+  border-top: 1px solid #ccc;
+  z-index: 1000;
+  transition: all 0.3s ease-in-out;
+}
+
+.modified-player .player {
+  display: grid;
+  grid-template-columns: auto 1fr; /* Cover image + text */
+  align-items: center;
+  gap: 12px;
+}
+
+/* Ensure the container wraps around the cover */
+.modified-player .player #cover-container {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+}
+
+/* Cover image */
+.modified-player .player #cover {
+  width: 50px;
+  height: 50px;
+  border-radius: 10%;
+  object-fit: cover;
+  position: relative;
+  z-index: 2;
+}
+
+/* Animated glowing ring */
+.modified-player .player #cover-container::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 70px; /* Slightly larger than cover */
+  height: 70px;
+  background: radial-gradient(circle, rgba(255, 0, 98, 0.3), rgba(0, 255, 255, 0.3), rgba(248, 248, 57, 0.3));
+  border-radius: 10%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  opacity: 0.8;
+  animation: beatGlow 1s infinite alternate ease-in-out;
+}
+
+/* Beat animation */
+@keyframes beatGlow {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.8;
+    filter: blur(3px);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.2);
+    opacity: 0.6;
+    filter: blur(5px);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.8;
+    filter: blur(3px);
+  }
+}
+
+
+/* Adjust track info layout */
+.modified-player .player .info {
+  display: flex;
+  flex-direction: column; /* Ensures title is above artist */
+  justify-content: center;
+  align-items: flex-start; /* Aligns text to the left */
+  gap: 2px; /* Adds slight spacing between title and artist */
+}
+
+/* Title styling */
+.modified-player .player #title {
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--text-light);
+  white-space: nowrap;
+  overflow: hidden;
+  border-right: 2px solid var(--text-light); /* Cursor effect */
+  display: inline-block;
+  width: 0; /* Start with 0 width */
+  animation: typing 3s steps(20, end) infinite alternate, blinkCursor 0.6s infinite;
+}
+
+/* Typing effect */
+@keyframes typing {
+  0% { width: 0; }
+  100% { width: 100%; }
+}
+
+/* Cursor blinking */
+@keyframes blinkCursor {
+  50% { border-color: transparent; }
+}
+
+
+/* Artist name styling */
+.modified-player .player #artist {
+  font-size: 14px;
+  color: var(--text-gray);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+/* Progress bar container */
+.progress-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
+
+/* Equalizer Animation Above Progress Bar */
+.equalizer {
+  display: flex;
+  gap: 3px;
+  width: 40px;
+  height: 20px;
+  position: absolute;
+  top: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.equalizer div {
+  width: 4px;
+  background: linear-gradient(to top, #ff0, #0ff, #f0f);
+  border-radius: 3px;
+  animation: equalizer 1s infinite ease-in-out alternate;
+}
+
+.equalizer div:nth-child(1) { animation-delay: 0s; }
+.equalizer div:nth-child(2) { animation-delay: 0.2s; }
+.equalizer div:nth-child(3) { animation-delay: 0.4s; }
+.equalizer div:nth-child(4) { animation-delay: 0.1s; }
+.equalizer div:nth-child(5) { animation-delay: 0.3s; }
+
+@keyframes equalizer {
+  0% { height: 5px; }
+  50% { height: 20px; }
+  100% { height: 8px; }
+}
+
+/* Progress Bar */
+#progress {
+  width: 100%;
+  height: 6px;
+  background: #444;
+  border-radius: 5px;
+  outline: none;
+}
+
+#progress::-webkit-slider-thumb {
+  width: 10px;
+  height: 10px;
+  background: #ff0;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+
+/* Player button specific styles */
+.modified-player .player-controls {
+  display: flex;
+  align-items: center;
+  gap: 20px; /* Increased gap between buttons */
+  margin-left: auto;
+  padding: 0 12px;
+  height: 100%;
+}
+
+.modified-player .player-controls button {
+  background: none;
+  border: none;
+  border-radius: 10%;
+  color: #ffffff; /* Bright white for better visibility */
+  font-size: 20px; /* Increased size */
+  width: 36px; /* Fixed width */
+  height: 36px; /* Fixed height */
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.2); /* Slight background */
+}
+
+/* Play button specific styles */
+.modified-player .player-controls button.play-pause {
+  width: 40px; /* Slightly larger */
+  height: 40px;
+  background-color: rgba(0, 0, 0, 0.3); /* Darker background */
+}
+
+/* Hover effects */
+.modified-player .player-controls button:hover {
+  background-color: rgba(0, 0, 0, 0.4);
+  transform: scale(1.1);
+}
+
+/* Active state */
+.modified-player .player-controls button:active {
+  transform: scale(0.95);
+}
+
+
+/* Next/Previous buttons */
+.modified-player .player-controls button.next,
+.modified-player .player-controls button.prev {
+  font-size: 20px;
+}
+
+/* Media queries for responsive design */
+@media screen and (max-width: 480px) {
+  .modified-player .player-controls {
+    gap: 16px;
+    padding: 0 8px;
+  }
+
+  .modified-player .player-controls button {
+    width: 32px;
+    height: 32px;
+    font-size: 20px;
+  }
+
+  .modified-player .player-controls button.play-pause {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .modified-player .player-controls {
+    gap: 12px;
+    padding: 0 6px;
+  }
+
+  .modified-player .player-controls button {
+    width: 28px;
+    height: 28px;
+    font-size: 18px;
+  }
+
+  .modified-player .player-controls button.play-pause {
+    width: 32px;
+    height: 32px;
+  }
+}
+.spotify-app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.container {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  margin-top: 60px;
+}
+
+.track-list {
+  flex-grow: 1;
+  overflow-y: auto;
+  list-style: none;
+  padding-bottom: 10px;
+}
+
+
+.bottom-menu {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: black;
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0;
+  z-index: 999; /* Ensure it stays below the player */
+}
+.menu-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: var(--text-gray);
+}
+
+.menu-item i {
+  font-size: 20px;
+  margin-bottom: 5px;
+}
+
+.menu-item.active,
+.menu-item:hover {
+  color: var(--accent-green);
+}
+
+
+
+.modified-player.fullscreen-active {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+}
+
+.modified-player.fullscreen-active img {
+  width: 80%;
+  max-width: 300px;
+  border-radius: 20px;
+}
+
+.modified-player.fullscreen-active #title {
+  font-size: 24px;
+  color: white;
+  margin-top: 10px;
+}
+
+.modified-player.fullscreen-active #artist {
+  font-size: 18px;
+  color: gray;
+}
+
+.modified-player.fullscreen-active .controls {
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  position: absolute;
+  bottom: 80px; /* Adjust position from bottom */
+  width: 100%;
+  gap: 40px; /* Space between buttons */
+}
+
+/* Style for Control Buttons */
+.modified-player.fullscreen-active .controls button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+/* Bigger Play Button */
+.modified-player.fullscreen-active .controls .play {
+  font-size: 50px; /* Make Play button larger */
+}
