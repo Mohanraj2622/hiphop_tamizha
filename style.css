@@ -424,14 +424,100 @@ body {
   right: 20px;
 }
 
+/* Close Button Styling */
 .close-btn {
-  background: none;
-  border: none;
-  font-size: 24px;
+  background-color: #fff; /* White background for a clean look */
+  border: 2px solid #fc0e0e; /* Red border to match the theme */
+  color: #fc0e0e; /* Red icon color */
+  font-size: 30px; /* Larger icon for better visibility */
   cursor: pointer;
   padding: 10px;
-  color: #fc0e0e;
+  border-radius: 50%; /* Circular button */
+  transition: all 0.3s ease; /* Smooth transition */
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 999; /* Keep it on top */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
 }
+
+/* Hover effect for close button */
+.close-btn:hover {
+  background-color: #fc0e0e; /* Red background on hover */
+  color: #fff; /* White icon color on hover */
+  transform: scale(1.1); /* Slightly enlarge the button */
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); /* Deeper shadow on hover */
+}
+
+/* Focus effect for accessibility */
+.close-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(252, 14, 14, 0.5); /* Glowing red focus outline */
+  border-radius: 50%;
+}
+
+/* Add a subtle glowing effect when button is clicked */
+@keyframes glowClick {
+  0% {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  50% {
+    box-shadow: 0 8px 12px rgba(252, 14, 14, 0.6); /* Glowing red */
+  }
+  100% {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* Active state with glowing effect */
+.close-btn:active {
+  animation: glowClick 0.3s ease-in-out; /* Apply glowing effect when clicked */
+}
+
+/* Responsive Design */
+
+/* For smaller screens (Mobile Devices) */
+@media (max-width: 768px) {
+  .close-btn {
+    font-size: 26px; /* Slightly smaller icon size */
+    padding: 8px; /* Less padding for small screens */
+    top: 15px; /* Adjust top position */
+    right: 15px; /* Adjust right position */
+  }
+
+  .close-btn:hover {
+    transform: scale(1.05); /* Slightly smaller scale on hover for mobile */
+  }
+}
+
+/* For very small screens (Portrait Mobile or Extra Small Devices) */
+@media (max-width: 480px) {
+  .close-btn {
+    font-size: 22px; /* Smaller icon size */
+    padding: 6px; /* Reduced padding */
+    top: 10px; /* Further adjust position */
+    right: 10px; /* Further adjust position */
+  }
+
+  .close-btn:hover {
+    transform: scale(1.05); /* Slightly smaller scale on hover */
+  }
+}
+
+/* For larger screens (Tablets and Larger Devices) */
+@media (min-width: 1024px) {
+  .close-btn {
+    font-size: 32px; /* Larger icon size */
+    padding: 12px; /* Increased padding */
+    top: 25px; /* Higher position */
+    right: 25px; /* Further right position */
+  }
+
+  .close-btn:hover {
+    transform: scale(1.1); /* Slightly larger scale on hover for larger screens */
+  }
+}
+
 
 .song-info {
   text-align: center;
@@ -475,4 +561,126 @@ body {
 
 #fullscreen-playPause {
   font-size: 32px;
+}
+/* Fullscreen button styling with advanced effects */
+.fullscreen-btn {
+  background: linear-gradient(135deg, #007bff, #00c6ff); /* Gradient background for a modern look */
+  color: white; /* White text/icon */
+  font-size: 24px; /* Larger font size for the icon */
+  padding: 15px 20px; /* Spacious padding for a nice button size */
+  border: none; /* Remove default border */
+  border-radius: 50%; /* Circular button */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: all 0.4s ease-out; /* Smooth transition for hover and focus */
+  display: flex; /* Flexbox to center the icon */
+  align-items: center; /* Vertically center the icon */
+  justify-content: center; /* Horizontally center the icon */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Soft shadow for depth */
+  position: absolute; /* Position freely */
+  top: 20px; /* Position near the top */
+  right: 20px; /* Position near the right */
+  z-index: 10; /* Ensure it stays on top */
+  width: 60px; /* Width of the button */
+  height: 60px; /* Height of the button */
+}
+
+/* Icon style */
+.fullscreen-btn i {
+  transition: transform 0.3s ease; /* Smooth rotation on hover */
+  font-size: 28px; /* Slightly larger icon */
+}
+
+/* Hover effect for the fullscreen button */
+.fullscreen-btn:hover {
+  background: linear-gradient(135deg, #00c6ff, #007bff); /* Reverse gradient on hover */
+  transform: scale(1.1); /* Slightly enlarge the button */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25); /* Stronger shadow on hover */
+}
+
+/* Icon rotation on hover */
+.fullscreen-btn:hover i {
+  transform: rotate(180deg); /* Rotate the icon when hovered */
+}
+
+/* Focus effect for accessibility */
+.fullscreen-btn:focus {
+  outline: none; /* Remove default focus outline */
+  box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.5); /* Custom focus glow */
+  border-radius: 50%; /* Maintain the circular shape */
+}
+
+/* Add a glowing animation for the button */
+@keyframes glowAnimation {
+  0% {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+  50% {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3), 0 0 10px rgba(0, 200, 255, 0.5); /* Glowing effect */
+  }
+  100% {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* Activate the glow animation */
+.fullscreen-btn:active {
+  animation: glowAnimation 1s ease-in-out infinite; /* Continuous glow when clicked */
+}
+
+/* Responsive Design */
+
+/* For smaller screens (Mobile devices) */
+@media (max-width: 768px) {
+  .fullscreen-btn {
+    width: 50px; /* Smaller button size */
+    height: 50px; /* Smaller button size */
+    padding: 10px; /* Less padding */
+    font-size: 20px; /* Smaller icon size */
+  }
+  .fullscreen-btn i {
+    font-size: 24px; /* Smaller icon size */
+  }
+  .fullscreen-btn:hover {
+    transform: scale(1.05); /* Slightly smaller scale on hover */
+  }
+  .fullscreen-btn:active {
+    animation: glowAnimation 1s ease-in-out infinite; /* Continuous glow when clicked */
+  }
+}
+
+/* For very small screens (Portrait mobile or extra small devices) */
+@media (max-width: 480px) {
+  .fullscreen-btn {
+    width: 45px; /* Further smaller button */
+    height: 45px; /* Further smaller button */
+    font-size: 18px; /* Even smaller font size */
+  }
+  .fullscreen-btn i {
+    font-size: 22px; /* Even smaller icon */
+  }
+  .fullscreen-btn:hover {
+    transform: scale(1.05); /* Slightly smaller scale on hover */
+  }
+  .fullscreen-btn:active {
+    animation: glowAnimation 1s ease-in-out infinite; /* Continuous glow when clicked */
+  }
+}
+
+/* For large screens (Tablets and larger devices) */
+@media (min-width: 1024px) {
+  .fullscreen-btn {
+    width: 70px; /* Larger button size */
+    height: 70px; /* Larger button size */
+    padding: 20px; /* More padding */
+    font-size: 28px; /* Larger icon size */
+  }
+  .fullscreen-btn i {
+    font-size: 32px; /* Larger icon size */
+  }
+  .fullscreen-btn:hover {
+    transform: scale(1.15); /* Larger scale on hover for larger screens */
+  }
+  .fullscreen-btn:active {
+    animation: glowAnimation 1s ease-in-out infinite; /* Continuous glow when clicked */
+  }
 }
