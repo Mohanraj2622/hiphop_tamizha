@@ -480,6 +480,8 @@ function sendMediaControlEvent(event) {
   }
 }
 
+
+
 // Function to send metadata updates to MIT App Inventor
 function sendMetadataUpdate(song) {
   if (window.AppInventor) {
@@ -492,6 +494,124 @@ function sendMetadataUpdate(song) {
   }
 }
 
+// Create notification container
+const createNotificationContainer = () => {
+  const container = document.createElement('div');
+  container.id = 'media-notification';
+  container.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 16px;
+    display: none;
+    z-index: 9999;
+    transition: transform 0.3s ease;
+    transform: translateY(-100%);
+  `;
+  
+  const content = document.createElement('div');
+  content.style.cssText = `
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 600px;
+    margin: 0 auto;
+  `;
+  
+  const songInfo = document.createElement('div');
+  songInfo.id = 'notification-song-info';
+  songInfo.style.cssText = `
+    flex-grow: 1;
+    margin-right: 16px;
+  `;
+  
+  const controls = document.createElement('div');
+  controls.style.cssText = `
+    display: flex;
+    gap: 12px;
+  `;
+  
+  const playPauseBtn = document.createElement('button');
+  playPauseBtn.id = 'notification-play-pause';
+  playPauseBtn.style.cssText = `
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 4px;
+  `;
+  
+  const closeBtn = document.createElement('button');
+  closeBtn.textContent = '✕';
+  closeBtn.style.cssText = `
+    background: none;
+    border: none;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 4px;
+  `;
+  
+  controls.appendChild(playPauseBtn);
+  controls.appendChild(closeBtn);
+  content.appendChild(songInfo);
+  content.appendChild(controls);
+  container.appendChild(content);
+  document.body.appendChild(container);
+  
+  return {
+    container,
+    songInfo,
+    playPauseBtn,
+    closeBtn
+  };
+};
+
+// Initialize notification elements
+const notification = createNotificationContainer();
+
+// Update notification content
+const updateNotification = () => {
+  const currentSong = SONGS[currentSongIndex];
+  notification.songInfo.innerHTML = `
+    <div style="font-weight: bold;">${currentSong.title}</div>
+    <div style="font-size: 0.9em; opacity: 0.8;">${currentSong.artist}</div>
+  `;
+  notification.playPauseBtn.textContent = isPlaying ? '⏸' : '▶️';
+};
+
+// Show notification
+const showNotification = () => {
+  notification.container.style.display = 'block';
+  // Force reflow
+  notification.container.offsetHeight;
+  notification.container.style.transform = 'translateY(0)';
+};
+
+// Hide notification
+const hideNotification = () => {
+  notification.container.style.transform = 'translateY(-100%)';
+  setTimeout(() => {
+    notification.container.style.display = 'none';
+  }, 300);
+};
+
+// Add event listeners
+notification.playPauseBtn.addEventListener('click', () => {
+  if (isPlaying) {
+    pauseSong();
+  } else {
+    playSong();
+  }
+  updateNotification();
+});
+
+notification.closeBtn.addEventListener('click', hideNotification);
+
 const loadSong = (index) => {
   const song = SONGS[index];
   title.textContent = song.title;
@@ -501,6 +621,11 @@ const loadSong = (index) => {
   currentTimeDisplay.textContent = "0:00";
   durationDisplay.textContent = "0:00";
   updateMediaSession(song);
+  updateNotification();
+
+  // Update notification when playback state changes
+  audio.addEventListener('play', updateNotification);
+  audio.addEventListener('pause', updateNotification);
 
   // Try to extract cover image from MP3 metadata
   fetch(song.url)
@@ -637,20 +762,20 @@ const renderSongList = (songs) => {
     img.classList.add('track-cover'); // Add CSS class for styling
 
     // Array of random cover images (URLs or Base64 data)
-const defaultCovers = [
-  "hiphop-cover-1.png",
-  "hiphop-cover-2.png",
-  "hiphop-cover-3.png",
-  "hiphop_cover-4.jpg"
-];
+    const defaultCovers = [
+      "hiphop-cover-1.png",
+      "hiphop-cover-2.png",
+      "hiphop-cover-3.png",
+      "hiphop_cover-4.jpg"
+    ];
 
-// Function to get a random cover image
-function getRandomCover() {
-  return defaultCovers[Math.floor(Math.random() * defaultCovers.length)];
-}
+    // Function to get a random cover image
+    function getRandomCover() {
+      return defaultCovers[Math.floor(Math.random() * defaultCovers.length)];
+    }
 
-// Set a random cover icon immediately
-img.src = getRandomCover();
+    // Set a random cover icon immediately
+    img.src = getRandomCover();
 
     // Create a div for track info
     const trackInfo = document.createElement('div');
@@ -744,13 +869,18 @@ const updateMediaSession = (song) => {
 
 // Ensure playback continues when app is in the background
 document.addEventListener("visibilitychange", () => {
-  if (!document.hidden && isPlaying) {
-    // Resume if the app comes back to the foreground and was playing
-    audio.play().catch(error => {
-      console.error("Resume after visibility change failed:", error);
-    });
+  if (document.hidden && isPlaying) {
+    showNotification();
+  } else {
+    hideNotification();
+    if (isPlaying) {
+      audio.play().catch(error => {
+        console.error("Resume after visibility change failed:", error);
+      });
+    }
   }
 });
+
 
 // Handle system-triggered pauses (e.g., app backgrounded)
 audio.addEventListener('pause', (event) => {
