@@ -28,6 +28,9 @@
           <!-- Player control -->
           <div class="player-container modified-player">
             <div class="player">
+              <button id="fullscreen-btn" class="fullscreen-btn">
+                <i class="fas fa-expand"></i> <!-- Font Awesome Fullscreen Icon -->
+              </button>
               <div id="cover-container">
                 <img id="cover" src="/api/placeholder/50/50" alt="Album Cover">
               </div>
@@ -87,7 +90,9 @@
       <script>
         document.addEventListener("DOMContentLoaded", function () {
           const player = document.querySelector(".modified-player");
+
           let fullscreenActive = false;
+
 
           let audio = document.getElementById("audio");
           if (!audio) {
@@ -132,8 +137,9 @@
             updateProgress();
           });
 
-          // Open fullscreen player
-          player.addEventListener("click", function () {
+          // Fullscreen button functionality
+          const fullscreenBtn = document.getElementById("fullscreen-btn");
+          fullscreenBtn.addEventListener("click", function () {
             if (!fullscreenActive) {
               fullscreenActive = true;
               openFullscreenPlayer();
@@ -147,7 +153,9 @@
             fullscreenOverlay.classList.add("fullscreen-player");
             fullscreenOverlay.innerHTML = `
               <div class="controls">
-                <button class="close-btn" id="closeFullscreen">×</button>
+               <button class="close-btn" id="closeFullscreen">
+             <i class="fas fa-times"></i> <!-- Font Awesome close icon -->
+            </button>
               </div>
               <div class="song-info">
                 <div id="cover-container">
@@ -226,7 +234,7 @@
           }
 
           function playNextSong() {
-            
+
             // Add logic to play the next song
           }
 
