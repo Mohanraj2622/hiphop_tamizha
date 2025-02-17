@@ -457,6 +457,7 @@ const SONGS = [
 
 let currentSongIndex = 0;
 let isPlaying = false;
+let userPaused = false;
 let isSearchActive = false;
 let searchResults = [];
 const audio = new Audio();
@@ -533,16 +534,22 @@ const loadSong = (index) => {
 
 // Play the current song
 const playSong = () => {
+  userPaused = false;
   isPlaying = true;
-  audio.play();
+  audio.play().catch(error => {
+    console.error("Playback failed:", error);
+  });
   playPauseButton.textContent = '⏸';
+  sendMediaControlEvent('play');
 };
 
-// Pause the current song
+// Pause the current song (only when user explicitly pauses)
 const pauseSong = () => {
+  userPaused = true;
   isPlaying = false;
   audio.pause();
   playPauseButton.textContent = '▶️';
+  sendMediaControlEvent('pause');
 };
 
 // Toggle play/pause
@@ -560,6 +567,7 @@ const playNextSong = () => {
     loadSong(currentSongIndex);
   }
   playSong();
+  sendMediaControlEvent('next');
 };
 
 // Play the previous song
@@ -572,6 +580,7 @@ const playPrevSong = () => {
     loadSong(currentSongIndex);
   }
   playSong();
+  sendMediaControlEvent('previous');
 };
 
 // Update the progress bar and time display
@@ -733,10 +742,25 @@ const updateMediaSession = (song) => {
   }
 };
 
-// Ensure playback continues after screen is off
-document.addEventListener("visibilitychange", function () {
-  if (document.hidden) {
-    playSong();
+// Ensure playback continues when app is in the background
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden && isPlaying) {
+    // Resume if the app comes back to the foreground and was playing
+    audio.play().catch(error => {
+      console.error("Resume after visibility change failed:", error);
+    });
+  }
+});
+
+// Handle system-triggered pauses (e.g., app backgrounded)
+audio.addEventListener('pause', (event) => {
+  if (!userPaused && isPlaying) {
+    // Automatically resume playback if paused by the system (not user)
+    setTimeout(() => {
+      audio.play().catch(error => {
+        console.error("Auto-resume failed:", error);
+      });
+    }, 100);
   }
 });
 
@@ -765,3 +789,4 @@ progress.addEventListener('input', handleSeek);
 // Initial setup
 loadSong(currentSongIndex);
 renderSongList(SONGS);
+setupMediaSession();
