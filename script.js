@@ -480,8 +480,6 @@ function sendMediaControlEvent(event) {
   }
 }
 
-
-
 // Function to send metadata updates to MIT App Inventor
 function sendMetadataUpdate(song) {
   if (window.AppInventor) {
@@ -494,124 +492,6 @@ function sendMetadataUpdate(song) {
   }
 }
 
-// Create notification container
-const createNotificationContainer = () => {
-  const container = document.createElement('div');
-  container.id = 'media-notification';
-  container.style.cssText = `
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    background: rgba(0, 0, 0, 0.9);
-    color: white;
-    padding: 16px;
-    display: none;
-    z-index: 9999;
-    transition: transform 0.3s ease;
-    transform: translateY(-100%);
-  `;
-  
-  const content = document.createElement('div');
-  content.style.cssText = `
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    max-width: 600px;
-    margin: 0 auto;
-  `;
-  
-  const songInfo = document.createElement('div');
-  songInfo.id = 'notification-song-info';
-  songInfo.style.cssText = `
-    flex-grow: 1;
-    margin-right: 16px;
-  `;
-  
-  const controls = document.createElement('div');
-  controls.style.cssText = `
-    display: flex;
-    gap: 12px;
-  `;
-  
-  const playPauseBtn = document.createElement('button');
-  playPauseBtn.id = 'notification-play-pause';
-  playPauseBtn.style.cssText = `
-    background: none;
-    border: none;
-    color: white;
-    font-size: 24px;
-    cursor: pointer;
-    padding: 4px;
-  `;
-  
-  const closeBtn = document.createElement('button');
-  closeBtn.textContent = '✕';
-  closeBtn.style.cssText = `
-    background: none;
-    border: none;
-    color: white;
-    font-size: 18px;
-    cursor: pointer;
-    padding: 4px;
-  `;
-  
-  controls.appendChild(playPauseBtn);
-  controls.appendChild(closeBtn);
-  content.appendChild(songInfo);
-  content.appendChild(controls);
-  container.appendChild(content);
-  document.body.appendChild(container);
-  
-  return {
-    container,
-    songInfo,
-    playPauseBtn,
-    closeBtn
-  };
-};
-
-// Initialize notification elements
-const notification = createNotificationContainer();
-
-// Update notification content
-const updateNotification = () => {
-  const currentSong = SONGS[currentSongIndex];
-  notification.songInfo.innerHTML = `
-    <div style="font-weight: bold;">${currentSong.title}</div>
-    <div style="font-size: 0.9em; opacity: 0.8;">${currentSong.artist}</div>
-  `;
-  notification.playPauseBtn.textContent = isPlaying ? '⏸' : '▶️';
-};
-
-// Show notification
-const showNotification = () => {
-  notification.container.style.display = 'block';
-  // Force reflow
-  notification.container.offsetHeight;
-  notification.container.style.transform = 'translateY(0)';
-};
-
-// Hide notification
-const hideNotification = () => {
-  notification.container.style.transform = 'translateY(-100%)';
-  setTimeout(() => {
-    notification.container.style.display = 'none';
-  }, 300);
-};
-
-// Add event listeners
-notification.playPauseBtn.addEventListener('click', () => {
-  if (isPlaying) {
-    pauseSong();
-  } else {
-    playSong();
-  }
-  updateNotification();
-});
-
-notification.closeBtn.addEventListener('click', hideNotification);
-
 const loadSong = (index) => {
   const song = SONGS[index];
   title.textContent = song.title;
@@ -621,12 +501,7 @@ const loadSong = (index) => {
   currentTimeDisplay.textContent = "0:00";
   durationDisplay.textContent = "0:00";
   updateMediaSession(song);
-  updateNotification();
-
-  // Update notification when playback state changes
-  audio.addEventListener('play', updateNotification);
-  audio.addEventListener('pause', updateNotification);
-
+  
   // Try to extract cover image from MP3 metadata
   fetch(song.url)
     .then(response => response.blob())
@@ -866,6 +741,17 @@ const updateMediaSession = (song) => {
       });
   }
 };
+
+  // Notification functions
+  function showNotification() {
+    console.log("Showing notification...");
+    // Add your notification UI logic here
+  }
+
+  function hideNotification() {
+    console.log("Hiding notification...");
+    // Add your notification UI logic here
+  }
 
 // Ensure playback continues when app is in the background
 document.addEventListener("visibilitychange", () => {
