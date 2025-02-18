@@ -501,7 +501,7 @@ const loadSong = (index) => {
   currentTimeDisplay.textContent = "0:00";
   durationDisplay.textContent = "0:00";
   updateMediaSession(song);
-  
+  cover.src = song.coverUrl || "default-cover.jpg";
   // Try to extract cover image from MP3 metadata
   fetch(song.url)
     .then(response => response.blob())
@@ -540,6 +540,7 @@ const playSong = () => {
     console.error("Playback failed:", error);
   });
   playPauseButton.textContent = '⏸';
+  updateAppInventorState(`Playing: ${SONGS[currentSongIndex].title}`)
   sendMediaControlEvent('play');
 };
 
@@ -549,6 +550,7 @@ const pauseSong = () => {
   isPlaying = false;
   audio.pause();
   playPauseButton.textContent = '▶️';
+  updateAppInventorState(`Paused: ${SONGS[currentSongIndex].title}`);
   sendMediaControlEvent('pause');
 };
 
@@ -792,6 +794,11 @@ searchInput.addEventListener('input', () => {
     filterSongs();
   }
 });
+
+playPauseButton.addEventListener('click', togglePlayPause);
+nextButton.addEventListener('click', playNextSong);
+prevButton.addEventListener('click', playPrevSong);
+progress.addEventListener('input', handleSeek);
 
 // Event listeners for audio and controls
 audio.addEventListener('ended', playNextSong);
