@@ -246,30 +246,28 @@ body {
 
 /* Artist name styling */
 .modified-player .player #artist {
-  font-size: 14px;
+  font-size: 12px;
   color: var(--text-gray);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-
 /* Progress bar container */
 .progress-bar {
   display: flex;
   align-items: center;
   gap: 10px;
-  position: relative;
+  position: fixed;
+  margin-left: 20%;
 }
-
-
 
 /* Player button specific styles */
 .modified-player .player-controls {
   display: flex;
   align-items: center;
-  gap: 20px; /* Increased gap between buttons */
-  margin-left: auto;
+  gap: 40px; /* Increased gap between buttons */
+  margin-left: 10px;
   padding: 0 12px;
   height: 100%;
 }
@@ -308,7 +306,6 @@ body {
   transform: scale(0.95);
 }
 
-
 /* Next/Previous buttons */
 .modified-player .player-controls button.next,
 .modified-player .player-controls button.prev {
@@ -326,11 +323,13 @@ body {
     width: 32px;
     height: 32px;
     font-size: 20px;
+    
   }
 
   .modified-player .player-controls button.play-pause {
     width: 36px;
     height: 36px;
+    
   }
 }
 
@@ -344,6 +343,7 @@ body {
     width: 28px;
     height: 28px;
     font-size: 18px;
+    
   }
 
   .modified-player .player-controls button.play-pause {
@@ -351,6 +351,7 @@ body {
     height: 32px;
   }
 }
+
 .spotify-app {
   display: flex;
   flex-direction: column;
@@ -408,7 +409,7 @@ body {
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
+  height: 60%;
   background: rgb(156, 152, 152);
   display: flex;
   flex-direction: column;
@@ -418,106 +419,136 @@ body {
   padding: 20px;
 }
 
-.controls {
-  position: absolute;
-  top: 20px;
-  right: 20px;
+/* Base Variables - Making it easy to maintain consistent theme colors */
+:root {
+  --primary-color: #0e6dfc;
+  --primary-rgb: 252, 14, 14;
+  --white: #fff;
+  --shadow-light: rgba(0, 0, 0, 0.1);
+  --shadow-medium: rgba(0, 0, 0, 0.2);
+  --transition-speed: 0.3s;
+  
+  /* Button Sizes */
+  --btn-size-desktop: 32px;
+  --btn-size-tablet: 30px;
+  --btn-size-mobile: 26px;
+  --btn-size-small: 22px;
 }
 
-/* Close Button Styling */
+/* Close Button Base Styles */
 .close-btn {
-  background-color: #fff; /* White background for a clean look */
-  border: 2px solid #fc0e0e; /* Red border to match the theme */
-  color: #fc0e0e; /* Red icon color */
-  font-size: 30px; /* Larger icon for better visibility */
-  cursor: pointer;
-  padding: 10px;
-  border-radius: 50%; /* Circular button */
-  transition: all 0.3s ease; /* Smooth transition */
+  /* Position */
   position: absolute;
   top: 20px;
   right: 20px;
-  z-index: 999; /* Keep it on top */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  z-index: 999;
+  
+  /* Appearance */
+  background-color: var(--white);
+  border: 2px solid var(--primary-color);
+  color: var(--primary-color);
+  border-radius: 50%;
+  
+  /* Dimensions */
+  font-size: var(--btn-size-tablet);
+  padding: 10px;
+  width: 50px;
+  height: 50px;
+  
+  /* Display */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  /* Interaction */
+  cursor: pointer;
+  
+  /* Effects */
+  box-shadow: 0 4px 6px var(--shadow-light);
+  transition: all var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Ensure smooth rendering */
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Hover effect for close button */
+/* Interactive States */
 .close-btn:hover {
-  background-color: #fc0e0e; /* Red background on hover */
-  color: #fff; /* White icon color on hover */
-  transform: scale(1.1); /* Slightly enlarge the button */
-  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); /* Deeper shadow on hover */
+  background-color: var(--primary-color);
+  color: var(--white);
+  transform: scale(1.05);
+  box-shadow: 0 8px 12px var(--shadow-medium);
 }
 
-/* Focus effect for accessibility */
 .close-btn:focus {
   outline: none;
-  box-shadow: 0 0 0 4px rgba(252, 14, 14, 0.5); /* Glowing red focus outline */
-  border-radius: 50%;
+  box-shadow: 0 0 0 4px rgba(var(--primary-rgb), 0.3);
 }
 
-/* Add a subtle glowing effect when button is clicked */
-@keyframes glowClick {
-  0% {
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+.close-btn:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 4px var(--shadow-light);
+}
+
+/* Click Animation */
+@keyframes buttonClick {
+  0%, 100% {
+    box-shadow: 0 4px 6px var(--shadow-light);
   }
   50% {
-    box-shadow: 0 8px 12px rgba(252, 14, 14, 0.6); /* Glowing red */
-  }
-  100% {
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 6px 8px rgba(var(--primary-rgb), 0.4);
   }
 }
 
-/* Active state with glowing effect */
-.close-btn:active {
-  animation: glowClick 0.3s ease-in-out; /* Apply glowing effect when clicked */
-}
-
-/* Responsive Design */
-
-/* For smaller screens (Mobile Devices) */
-@media (max-width: 768px) {
-  .close-btn {
-    font-size: 26px; /* Slightly smaller icon size */
-    padding: 8px; /* Less padding for small screens */
-    top: 15px; /* Adjust top position */
-    right: 15px; /* Adjust right position */
-  }
-
-  .close-btn:hover {
-    transform: scale(1.05); /* Slightly smaller scale on hover for mobile */
-  }
-}
-
-/* For very small screens (Portrait Mobile or Extra Small Devices) */
+/* Responsive Design - Mobile First Approach */
 @media (max-width: 480px) {
   .close-btn {
-    font-size: 22px; /* Smaller icon size */
-    padding: 6px; /* Reduced padding */
-    top: 10px; /* Further adjust position */
-    right: 10px; /* Further adjust position */
-  }
-
-  .close-btn:hover {
-    transform: scale(1.05); /* Slightly smaller scale on hover */
+    font-size: var(--btn-size-small);
+    padding: 6px;
+    top: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
   }
 }
 
-/* For larger screens (Tablets and Larger Devices) */
+@media (min-width: 481px) and (max-width: 768px) {
+  .close-btn {
+    font-size: var(--btn-size-mobile);
+    padding: 8px;
+    top: 15px;
+    right: 15px;
+    width: 45px;
+    height: 45px;
+  }
+}
+
 @media (min-width: 1024px) {
   .close-btn {
-    font-size: 32px; /* Larger icon size */
-    padding: 12px; /* Increased padding */
-    top: 25px; /* Higher position */
-    right: 25px; /* Further right position */
+    font-size: var(--btn-size-desktop);
+    padding: 12px;
+    top: 25px;
+    right: 25px;
+    width: 55px;
+    height: 55px;
   }
-
+  
   .close-btn:hover {
-    transform: scale(1.1); /* Slightly larger scale on hover for larger screens */
+    transform: scale(1.1);
   }
 }
 
+/* Reduce Motion - Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .close-btn {
+    transition: none;
+  }
+  
+  .close-btn:hover {
+    transform: none;
+  }
+}
 
 .song-info {
   text-align: center;
@@ -532,36 +563,7 @@ body {
   margin-bottom: 20px;
 }
 
-.progress-bar {
-  width: 80%;
-  max-width: 500px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 20px 0;
-}
 
-.progress-bar input[type="range"] {
-  flex: 1;
-}
-
-.p-controls {
-  display: flex;
-  gap: 20px;
-  align-items: center;
-}
-
-.p-controls button {
-  background: none;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-  padding: 10px;
-}
-
-#fullscreen-playPause {
-  font-size: 32px;
-}
 /* Fullscreen button styling with advanced effects */
 .fullscreen-btn {
   background: linear-gradient(135deg, #007bff, #00c6ff); /* Gradient background for a modern look */
